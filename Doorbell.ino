@@ -52,10 +52,10 @@ void setup() {
 }
 
 void loop() {
-    Portal.handleClient();
+  Portal.handleClient();
 
-    if (digitalRead(DOOR_BELL_BUTTON) == LOW) {
-      Serial.println("Pressed button. Triggering alert...");
-      handleDoorbellButton();
-    }
+  if (digitalRead(DOOR_BELL_BUTTON) == LOW) {
+    Serial.println("Pressed button. Triggering alert...");
+    handleDoorbellButton();
+  }
 }
