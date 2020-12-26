@@ -32,21 +32,27 @@ void rootPage() {
   server.send(200, "text/html", content);
 }
 
-void setup() {
-  delay(1000);
-  Serial.begin(115200);
-  Serial.println();
-
+void configureWiFi() {
   WiFiConfig.apid = "XS-ESP-DoorBell";
   WiFiConfig.psk = WiFi.macAddress();
   Portal.config(WiFiConfig);
   
   Serial.println("WiFi Credentials: SSID=" + WiFiConfig.apid + " ; Pass=" + WiFi.macAddress());
-
-  server.on("/", rootPage);
+  
   if (Portal.begin()) {
     Serial.println("WiFi connected: " + WiFi.localIP().toString());
   }
+}
+
+void setup() {
+  delay(1000);
+  Serial.begin(115200);
+  Serial.println();
+
+  configureWiFi();
+  
+  server.on("/", rootPage);
+  
 
   pinMode(DOOR_BELL_BUTTON, INPUT);
 }
