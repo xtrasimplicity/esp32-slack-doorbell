@@ -9,6 +9,7 @@ AutoConnect Portal(server);
 AutoConnectConfig WiFiConfig;
 
 const int DOOR_BELL_BUTTON = 0; // Currently mapped to IO0 on ESP32 WROOM
+const char SLACK_HOOK_URL[] = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXX";
 const char ITAG_DEVICE_UUID[] = "0000ffe0-0000-1000-8000-00805f9b34fb";
 const char ITAG_BUTTON_CHARACTERISTIC_UUID[] = "0000ffe1-0000-1000-8000-00805f9b34fb";
 
