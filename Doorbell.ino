@@ -2,10 +2,16 @@
 #include <HTTPClient.h>
 #include <BLEDevice.h>
 #include "configurator.h"
+#include "doorbell.h"
 
 static Configurator* configurator;
+static DoorBell* doorbell;
+
+const std::string SLACK_HOOK_URL = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXX";
+const std::string SLACK_PAYLOAD = "{'text':'There is someone at the door!'}";
+
 const int DOOR_BELL_BUTTON = 0; // Currently mapped to IO0 on ESP32 WROOM
-const char SLACK_HOOK_URL[] = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXX";
+
 const char ITAG_DEVICE_UUID[] = "0000ffe0-0000-1000-8000-00805f9b34fb";
 const char ITAG_BUTTON_CHARACTERISTIC_UUID[] = "0000ffe1-0000-1000-8000-00805f9b34fb";
 
@@ -103,6 +109,8 @@ void setup() {
   Serial.println();
 
   configurator = new Configurator();
+  doorbell = new DoorBell(SLACK_HOOK_URL, SLACK_PAYLOAD);
+
   configureBLE();
 
   pinMode(DOOR_BELL_BUTTON, INPUT);
@@ -110,6 +118,16 @@ void setup() {
 
 void loop() {
     configurator->handleWebClients();
+
+  if (digitalRead(DOOR_BELL_BUTTON) == LOW) {
+    if (doorbell->trigger()) {
+      Serial.println("Successfully triggered doorbell!");
+    } else {
+      Serial.println("Unable to trigger doorbell!");
+    }
+  }
+  
+  
   if (shouldConnectToBLEDevice) {
     // Attempt connection to the BLE device
     if (connectToiTag()) {
@@ -123,8 +141,5 @@ void loop() {
     shouldConnectToBLEDevice = false; // We don't want to keep trying to re-connect
   }
 
-  if (digitalRead(DOOR_BELL_BUTTON) == LOW) {
-    Serial.println("Pressed button. Triggering alert...");
-    handleDoorbellButton();
-  }
+
 }
