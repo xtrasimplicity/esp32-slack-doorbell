@@ -4,7 +4,7 @@
 class DoorBell {
   public:
     DoorBell(const std::string &slackHookURL, const std::string &slackPayload) : _slackHookURL(slackHookURL),_slackPayload(slackPayload) {};
-    boolean trigger();
+    bool trigger();
 
   protected:
     const std::string& _slackHookURL;

@@ -1,6 +1,6 @@
 #include "doorbell.h"
 
-boolean DoorBell::trigger() {
+bool DoorBell::trigger() {
   HTTPClient http;
   
   http.begin(this->_slackHookURL.c_str());
