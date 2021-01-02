@@ -1,13 +1,9 @@
 #include <WiFi.h>
-#include <WebServer.h>
-#include <AutoConnect.h>
 #include <HTTPClient.h>
 #include <BLEDevice.h>
+#include "configurator.h"
 
-WebServer server;
-AutoConnect Portal(server);
-AutoConnectConfig WiFiConfig;
-
+static Configurator* configurator;
 const int DOOR_BELL_BUTTON = 0; // Currently mapped to IO0 on ESP32 WROOM
 const char SLACK_HOOK_URL[] = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXX";
 const char ITAG_DEVICE_UUID[] = "0000ffe0-0000-1000-8000-00805f9b34fb";
@@ -90,22 +86,6 @@ bool connectToiTag() {
   return true;
 }
 
-void rootPage() {
-  char content[] = "<a href=\"/_ac\">Configure WiFi</a>";
-  server.send(200, "text/html", content);
-}
-
-void configureWiFi() {
-  WiFiConfig.apid = "XS-ESP-DoorBell";
-  WiFiConfig.psk = WiFi.macAddress();
-  Portal.config(WiFiConfig);
-  
-  Serial.println("WiFi Credentials: SSID=" + WiFiConfig.apid + " ; Pass=" + WiFi.macAddress());
-  
-  if (Portal.begin()) {
-    Serial.println("WiFi connected: " + WiFi.localIP().toString());
-  }
-}
 
 void configureBLE() {
   BLEDevice::init("");
@@ -122,17 +102,14 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
 
-  configureWiFi();
+  configurator = new Configurator();
   configureBLE();
-  
-  server.on("/", rootPage);
 
   pinMode(DOOR_BELL_BUTTON, INPUT);
 }
 
 void loop() {
-  Portal.handleClient();
-
+    configurator->handleWebClients();
   if (shouldConnectToBLEDevice) {
     // Attempt connection to the BLE device
     if (connectToiTag()) {
