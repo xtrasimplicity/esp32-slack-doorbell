@@ -25,6 +25,9 @@ void setup() {
   tagHelper->setSearchParameters(ITAG_DEVICE_UUID, ITAG_BUTTON_CHARACTERISTIC_UUID);
   tagHelper->scan();
 
+  if (tagHelper->tagExists())
+   tagHelper->tag->onButtonClick([]() { doorbell->trigger(); }); // ToDo: Change this to call a static function instead, as wrapping this in a lambda is less than ideal.
+
   pinMode(DOOR_BELL_BUTTON, INPUT);
 }
 

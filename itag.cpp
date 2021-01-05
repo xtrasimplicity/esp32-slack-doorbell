@@ -1,8 +1,8 @@
 #include "itag.h"
 
-static void notificationCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
+void iTag::notificationCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
    Serial.println("Received button press from iTag. Triggering alert.");
-   // TBC
+   iTag::onButtonClickHandler();
 }
 
 bool iTag::connect() {
@@ -34,8 +34,14 @@ bool iTag::connect() {
   }
 
   if (pRemoteCharacteristic->canNotify()) {
-    pRemoteCharacteristic->registerForNotify(notificationCallback, true, false);
+    pRemoteCharacteristic->registerForNotify(iTag::notificationCallback, true, false);
   }
 
   return true;
 }
+
+void iTag::onButtonClick(void(*f)()) {
+  iTag::onButtonClickHandler = f;
+}
+
+iTag::parameterless_func iTag::onButtonClickHandler = [](){};
