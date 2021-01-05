@@ -12,6 +12,7 @@ class iTagHelper {
     static bool shouldConnectToTag;
     static iTag* tag;
     static BLEUUID getServiceUUID() { return m_serviceUUID; }
+    static BLEUUID getCharacteristicUUID() { return m_characteristicUUID; }
 
   private:
     static BLEUUID m_serviceUUID;

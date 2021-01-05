@@ -7,7 +7,7 @@ class AdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
 
     if (advertisedDevice.haveServiceUUID() && advertisedDevice.isAdvertisingService(iTagHelper::getServiceUUID())) {
       BLEDevice::getScan()->stop();
-      iTagHelper::tag = new iTag(new BLEAdvertisedDevice(advertisedDevice));
+      iTagHelper::tag = new iTag(new BLEAdvertisedDevice(advertisedDevice), iTagHelper::getServiceUUID(), iTagHelper::getCharacteristicUUID());
       iTagHelper::shouldConnectToTag = true;
     }
   }
