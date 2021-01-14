@@ -6,7 +6,8 @@ class AdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
     Serial.println(advertisedDevice.toString().c_str());
 
     if (advertisedDevice.haveServiceUUID() && advertisedDevice.isAdvertisingService(iTagHelper::getServiceUUID())) {
-      BLEDevice::getScan()->stop();
+      iTagHelper::pBLEScan->stop();
+
       iTagHelper::tag = new iTag(new BLEAdvertisedDevice(advertisedDevice), iTagHelper::getServiceUUID(), iTagHelper::getCharacteristicUUID());
       iTagHelper::shouldConnectToTag = true;
     }
@@ -15,7 +16,7 @@ class AdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
 
 void iTagHelper::scan() {
   BLEDevice::init("");
-  BLEScan* pBLEScan = BLEDevice::getScan();
+  pBLEScan = BLEDevice::getScan();
   pBLEScan->setAdvertisedDeviceCallbacks(new AdvertisedDeviceCallbacks());
   pBLEScan->setInterval(1349);
   pBLEScan->setWindow(449);
@@ -32,3 +33,4 @@ bool iTagHelper::shouldConnectToTag = false;
 iTag* iTagHelper::tag = nullptr;
 BLEUUID iTagHelper::m_serviceUUID = BLEUUID("0000");
 BLEUUID iTagHelper::m_characteristicUUID = BLEUUID("0000");
+BLEScan* iTagHelper::pBLEScan = nullptr;

@@ -13,6 +13,7 @@ class iTagHelper {
     static iTag* tag;
     static BLEUUID getServiceUUID() { return m_serviceUUID; }
     static BLEUUID getCharacteristicUUID() { return m_characteristicUUID; }
+    static BLEScan* pBLEScan;
 
   private:
     static BLEUUID m_serviceUUID;
