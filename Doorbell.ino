@@ -1,16 +1,11 @@
 #include "configurator.h"
 #include "doorbell.h"
-#include "itag_helper.h"
 
 static Configurator* configurator;
 static DoorBell* doorbell;
-static iTagHelper* tagHelper;
 
 const std::string SLACK_HOOK_URL = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXX";
 const std::string SLACK_PAYLOAD = "{'text':'There is someone at the door!'}";
-const int DOOR_BELL_BUTTON = 0; // Currently mapped to IO0 on ESP32 WROOM
-const std::string ITAG_DEVICE_UUID = "0000ffe0-0000-1000-8000-00805f9b34fb";
-const std::string ITAG_BUTTON_CHARACTERISTIC_UUID = "0000ffe1-0000-1000-8000-00805f9b34fb";
 
 void setup() {
   delay(1000);
@@ -19,11 +14,6 @@ void setup() {
 
   configurator = new Configurator();
   doorbell = new DoorBell(SLACK_HOOK_URL, SLACK_PAYLOAD);
-  tagHelper->setSearchParameters(ITAG_DEVICE_UUID, ITAG_BUTTON_CHARACTERISTIC_UUID);
-  tagHelper->scan();
-
-  if (tagHelper->tagExists())
-   tagHelper->tag->onButtonClick([]() { doorbell->trigger(); }); // ToDo: Change this to call a static function instead, as wrapping this in a lambda is less than ideal.
 
   pinMode(DOOR_BELL_BUTTON, INPUT);
 }
@@ -37,20 +27,5 @@ void loop() {
     } else {
       Serial.println("Unable to trigger doorbell!");
     }
-  }
-  
-  
-  if (tagHelper->tagExists() && tagHelper->shouldConnectToTag) {
-    // Attempt connection to the tag
-    if (tagHelper->tag->connect()) {
-      Serial.println("Successfully connected to the iTag!");
-      iTagHelper::pBLEScan->clearResults();
-    } else {
-       Serial.println("Couldn't connect to iTag with UUID ");
-      Serial.print(ITAG_DEVICE_UUID.c_str());
-      Serial.println("");
-    }
-
-    tagHelper->shouldConnectToTag = false; // We don't want to keep trying to re-connect
   }
 }
