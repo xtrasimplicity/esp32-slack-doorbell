@@ -6,6 +6,7 @@ static DoorBell* doorbell;
 
 const std::string SLACK_HOOK_URL = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXX";
 const std::string SLACK_PAYLOAD = "{'text':'There is someone at the door!'}";
+const int DOOR_BELL_BUTTON = 0; // Currently mapped to IO0 on ESP32 WROOM
 
 void setup() {
   delay(1000);
