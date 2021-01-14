@@ -47,6 +47,7 @@ void loop() {
     // Attempt connection to the tag
     if (tagHelper->tag->connect()) {
       Serial.println("Successfully connected to the iTag!");
+      iTagHelper::pBLEScan->clearResults();
     } else {
        Serial.println("Couldn't connect to iTag with UUID ");
       Serial.print(ITAG_DEVICE_UUID.c_str());
