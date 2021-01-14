@@ -1,6 +1,3 @@
-#include <WiFi.h>
-#include <HTTPClient.h>
-#include <BLEDevice.h>
 #include "configurator.h"
 #include "doorbell.h"
 #include "itag_helper.h"
